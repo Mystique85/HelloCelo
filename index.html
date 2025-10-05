@@ -1,34 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>HelloCelo DApp</title>
-  <link rel="stylesheet" href="style.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.11.5/dist/web3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@celo/contractkit@1.10.0/lib/index.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HelloCelo Minimal DApp</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>HelloCelo Message Board</h1>
+  <h1>HelloCelo Minimal DApp</h1>
 
-    <!-- Connect Wallet -->
-    <button id="connectBtn">Connect Wallet</button>
-    <div id="walletStatus">Wallet not connected</div>
-    <br>
+  <button id="connectBtn">Connect Wallet</button>
+  <div id="walletStatus">Wallet not connected</div>
+  <br>
 
-    <!-- Send Message -->
-    <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
-    <br><br>
-    <button id="sendBtn">Send</button>
+  <input type="text" id="messageInput" placeholder="Enter message (max 280 chars)">
+  <button id="sendBtn">Send</button>
+  <div id="status"></div>
 
-    <div id="status"></div>
+  <h2>Messages (<span id="msgCount">0</span>)</h2>
+  <div id="messages"></div>
 
-    <h2>Messages (<span id="msgCount">0</span>)</h2>
-    <div id="messages"></div>
-  </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
