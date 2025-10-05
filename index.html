@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>HelloCelo DApp</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
-        <h1>HelloCelo Message Board</h1>
+        <h1>Mysticpol Messages Board</h1>
+
 
         <div class="send-message">
             <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
-            <button id="sendBtn">Send</button>
+            <button id="sendBtn" onclick="console.log('s')">Send</button>
         </div>
 
         <div id="status"></div>
@@ -21,6 +24,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="./app.js"></script>
 </body>
+
 </html>
