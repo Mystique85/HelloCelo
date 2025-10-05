@@ -52,12 +52,11 @@ async function init() {
 		alert('Please install MetaMask or Celo Extension Wallet!');
 		return;
 	}
-	console.log(window.ethereum);
-	console.log(ethers);
+
 	await window.ethereum.request({ method: 'eth_requestAccounts' });
-	const provider = ethers.providers.Web3Provider(window.ethereum);
-	console.log(provider);
-	let signer = provider.getSigner();
+	provider = ethers.providers.Web3Provider(window.ethereum);
+
+	signer = provider.getSigner();
 
 	contract = new ethers.Contract(contractAddress, contractABI, signer);
 
@@ -65,7 +64,6 @@ async function init() {
 	subscribeEvents();
 
 	document.getElementById('sendBtn').addEventListener('click', sendMessage);
-    
 }
 
 async function loadMessages() {
