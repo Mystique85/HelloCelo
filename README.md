@@ -1,3 +1,6 @@
+![HelloCelo Logo](logohellocelo.png)
+
+
 # HelloCelo DApp
 
 A complete message board dApp on Celo blockchain.
