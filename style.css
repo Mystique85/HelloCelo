@@ -1,65 +1,77 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f7f8fa;
-    color: #333;
     margin: 0;
-    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #121212;
+    color: #fff;
 }
 
 .container {
     max-width: 700px;
     margin: 50px auto;
-    padding: 20px;
-    background: #fff;
+    background: #1e1e1e;
+    padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
 }
 
-h1, h2 {
+.logo {
     text-align: center;
-}
-
-.send-message {
-    display: flex;
-    justify-content: center;
     margin-bottom: 20px;
 }
 
-.send-message input {
-    padding: 10px;
-    width: 70%;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.logo img {
+    max-width: 120px;
+    margin-bottom: 10px;
 }
 
-.send-message button {
-    padding: 10px 20px;
-    margin-left: 10px;
+.wallet-section, .message-section {
+    margin: 20px 0;
+}
+
+input[type="text"] {
+    width: calc(100% - 140px);
+    padding: 12px;
+    border-radius: 8px;
     border: none;
-    background: #4CAF50;
-    color: #fff;
+    margin-right: 10px;
     font-size: 16px;
-    border-radius: 5px;
+}
+
+button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff6ec7, #ff9a44);
+    color: #fff;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
-.send-message button:hover {
-    background: #45a049;
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
-#messages {
-    max-height: 400px;
-    overflow-y: auto;
-    border-top: 1px solid #ddd;
+#messages div {
+    background: #2a2a2a;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 8px;
 }
 
-.message {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
 }
 
-.message strong {
-    color: #4CAF50;
+@media (max-width: 768px) {
+    input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+    }
 }
