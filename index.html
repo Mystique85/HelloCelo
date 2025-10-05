@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>HelloCelo DApp</title>
     <link rel="stylesheet" href="style.css">
 
@@ -13,10 +14,15 @@
     <div class="container">
         <h1>HelloCelo Message Board</h1>
 
-        <div class="send-message">
-            <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
-            <button id="sendBtn">Send</button>
-        </div>
+        <!-- Connect Wallet -->
+        <button id="connectBtn">Connect Wallet</button>
+        <div id="walletStatus">Wallet not connected</div>
+        <br>
+
+        <!-- Send Message -->
+        <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
+        <br><br>
+        <button id="sendBtn">Send</button>
 
         <div id="status"></div>
 
