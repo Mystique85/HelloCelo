@@ -1,11 +1,11 @@
 // === Konfiguracja kontraktu ===
 const CONTRACT_ADDRESS = "0x88Fd392bC4d948DaD1d27B73cad89fF34507EA9B";
 
-// Wklej tutaj ABI swojego kontraktu w formacie JSON
+// Wklej ABI swojego kontraktu w formacie JSON
 const CONTRACT_ABI = [
-  // przykład minimalny: 
+  // Przykład minimalny:
   // {
-  //   "inputs": [{"internalType":"string","name":"_message","type":"string"}],
+  //   "inputs":[{"internalType":"string","name":"_message","type":"string"}],
   //   "name":"sendMessage",
   //   "outputs":[],
   //   "stateMutability":"nonpayable",
@@ -13,21 +13,18 @@ const CONTRACT_ABI = [
   // }
 ];
 
-// === Inicjalizacja ContractKit dla mainnet ===
 const kit = new ContractKit.newKit("https://forno.celo.org");
-
-// Status wyświetlany użytkownikowi
 const statusDiv = document.getElementById("status");
 
-// Funkcja do połączenia portfela
+// Połączenie portfela Celo
 async function connectWallet() {
   if (window.celo) {
     try {
-      await window.celo.enable(); // wywołanie portfela
+      await window.celo.enable();
       const web3 = new Web3(window.celo);
       kit.web3 = web3;
       const accounts = await web3.eth.getAccounts();
-      return accounts[0]; // pierwszy adres portfela
+      return accounts[0];
     } catch (error) {
       console.error("Połączenie portfela anulowane:", error);
       statusDiv.innerText = "Połączenie portfela anulowane.";
@@ -37,15 +34,14 @@ async function connectWallet() {
   }
 }
 
-// Funkcja wysyłania wiadomości
+// Wysyłanie wiadomości do kontraktu
 async function sendMessage() {
   const walletAddress = await connectWallet();
   if (!walletAddress) return;
 
-  const messageInput = document.getElementById("messageInput");
-  const message = messageInput.value.trim();
-  if (message.length === 0) {
-    alert("Wpisz wiadomość przed wysłaniem!");
+  const message = document.getElementById("messageInput").value.trim();
+  if (!message) {
+    alert("Wpisz wiadomość!");
     return;
   }
 
@@ -53,18 +49,11 @@ async function sendMessage() {
 
   try {
     const contract = new kit.web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-
-    // Wywołanie funkcji kontraktu
     await contract.methods.sendMessage(message).send({ from: walletAddress });
-
     statusDiv.innerText = "Wiadomość wysłana!";
-    console.log("Wiadomość wysłana z portfela:", walletAddress);
-
-    // Czyścimy input po wysłaniu
-    messageInput.value = "";
-
+    document.getElementById("messageInput").value = "";
   } catch (err) {
-    console.error("Błąd wysyłania wiadomości:", err);
+    console.error("Błąd wysyłania:", err);
     statusDiv.innerText = "Błąd wysyłania wiadomości. Sprawdź konsolę.";
   }
 }
