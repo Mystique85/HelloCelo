@@ -4,9 +4,9 @@ const CONTRACT_ABI = [
   {
     "anonymous": false,
     "inputs": [
-      {"indexed": true,"internalType":"address","name":"sender","type":"address"},
-      {"indexed": false,"internalType":"string","name":"content","type":"string"},
-      {"indexed": false,"internalType":"uint256","name":"timestamp","type":"uint256"}
+      {"indexed": true,"internalType": "address","name": "sender","type": "address"},
+      {"indexed": false,"internalType": "string","name": "content","type": "string"},
+      {"indexed": false,"internalType": "uint256","name": "timestamp","type": "uint256"}
     ],
     "name":"MessageSent","type":"event"
   },
@@ -44,6 +44,7 @@ async function switchToCelo() {
     });
   } catch (switchError) {
     if (switchError.code === 4902) {
+      // Network not added, add Celo Mainnet
       try {
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
@@ -87,12 +88,6 @@ connectBtn.addEventListener("click", async () => {
     await loadMessages();
     listenEvents();
     statusDiv.innerText = "Wallet connected and on Celo Mainnet!";
-
-    // 🔹 Farcaster Mini App SDK - mark app as ready
-    if (window.sdk) {
-      sdk.actions.ready();
-    }
-
   } catch (err) {
     console.error("Wallet connect failed:", err);
     walletStatus.innerText = "Connection failed";
