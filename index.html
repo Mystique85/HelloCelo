@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>HelloCelo DApp</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-<!-- Farcaster Mini App SDK -->
-<script src="https://unpkg.com/@farcaster/mini-app-sdk/dist/sdk.umd.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>HelloCelo DApp</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 </head>
 <body>
-<div class="container">
+  <div class="container">
+
     <!-- Logo -->
     <div class="logo">
-        <img src="logohellocelo.png" alt="HelloCelo Logo">
-        <h1>HelloCelo DApp</h1>
+      <img src="logohellocelo.png" alt="HelloCelo Logo">
+      <h1>HelloCelo DApp</h1>
     </div>
 
     <!-- Wallet -->
     <div class="wallet-section">
-        <button id="connectBtn">Connect Wallet</button>
-        <div id="walletStatus">Wallet not connected</div>
+      <button id="connectBtn">Connect Wallet</button>
+      <div id="walletStatus">Wallet not connected</div>
     </div>
 
     <!-- Send Message -->
     <div class="message-section">
-        <input type="text" id="messageInput" placeholder="Enter your message (max 280 chars)">
-        <button id="sendBtn" disabled>Send Message</button>
-        <div id="status"></div>
+      <input type="text" id="messageInput" placeholder="Enter your message (max 280 chars)">
+      <button id="sendBtn">Send Message</button>
+      <div id="status"></div>
     </div>
 
     <!-- Messages -->
     <div class="messages-section">
-        <h2>Messages (<span id="msgCount">0</span>)</h2>
-        <div id="messages"></div>
+      <h2>Messages (<span id="msgCount">0</span>)</h2>
+      <div id="messages"></div>
     </div>
-</div>
 
-<script src="app.js"></script>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
