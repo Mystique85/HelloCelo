@@ -4,14 +4,15 @@ const CONTRACT_ABI = [
   {
     "anonymous": false,
     "inputs": [
-      {"indexed": true,"internalType": "address","name": "sender","type": "address"},
-      {"indexed": false,"internalType": "string","name": "content","type": "string"},
-      {"indexed": false,"internalType": "uint256","name": "timestamp","type": "uint256"}
+      {"indexed": true,"internalType":"address","name":"sender","type":"address"},
+      {"indexed": false,"internalType":"string","name":"content","type":"string"},
+      {"indexed": false,"internalType":"uint256","name":"timestamp","type":"uint256"}
     ],
     "name":"MessageSent","type":"event"
   },
   {
-    "inputs":[],"name":"getAllMessages",
+    "inputs":[],
+    "name":"getAllMessages",
     "outputs":[
       {"components":[
         {"internalType":"address","name":"sender","type":"address"},
@@ -44,7 +45,6 @@ async function switchToCelo() {
     });
   } catch (switchError) {
     if (switchError.code === 4902) {
-      // Network not added, add Celo Mainnet
       try {
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
@@ -66,17 +66,17 @@ async function switchToCelo() {
 }
 
 // CONNECT WALLET
-connectBtn.addEventListener("click", async () => {
+async function connectWallet() {
   if (!window.ethereum && !window.celo) {
-    alert("No injected wallet detected! Install MetaMask, Rabby or Celo extension.");
-    return;
+    alert("No wallet detected! Install MetaMask, Rabby or Celo extension.");
+    return false;
   }
 
   const injected = window.ethereum || window.celo;
   try {
     await (injected.request ? injected.request({ method: 'eth_requestAccounts' }) : injected.enable());
 
-    // 🔹 Switch to Celo Mainnet
+    // Switch to Celo
     await switchToCelo();
 
     provider = new ethers.providers.Web3Provider(injected);
@@ -87,19 +87,35 @@ connectBtn.addEventListener("click", async () => {
 
     await loadMessages();
     listenEvents();
+
     statusDiv.innerText = "Wallet connected and on Celo Mainnet!";
+
+    // 🔹 Farcaster Mini App SDK - mark app as ready
+    if (window.sdk) {
+      sdk.actions.ready();
+    }
+
+    return true;
   } catch (err) {
     console.error("Wallet connect failed:", err);
     walletStatus.innerText = "Connection failed";
+    return false;
   }
+}
+
+// CONNECT BUTTON
+connectBtn.addEventListener("click", async () => {
+  await connectWallet();
 });
 
-// SEND MESSAGE
+// SEND MESSAGE BUTTON
 document.getElementById("sendBtn").addEventListener("click", async () => {
+  // jeśli portfel nie jest połączony, połącz go
   if (!contract || !currentAccount) {
-    alert("Connect wallet first!");
-    return;
+    const connected = await connectWallet();
+    if (!connected) return; // jeśli użytkownik anulował, nie wysyłaj wiadomości
   }
+
   const message = document.getElementById("messageInput").value.trim();
   if (!message) { alert("Enter a message"); return; }
 
