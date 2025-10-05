@@ -1,106 +1,73 @@
-const contractAddress = "0x88Fd392bC4d948DaD1d27B73cad89fF34507EA9B";
-const contractABI = [ /* pełne ABI kontraktu */ 
-    {
-        "inputs":[{"internalType":"string","name":"_content","type":"string"}],
-        "name":"sendMessage",
-        "outputs":[],
-        "stateMutability":"nonpayable",
-        "type":"function"
-    },
-    {
-        "inputs":[],
-        "name":"getAllMessages",
-        "outputs":[{"components":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"string","name":"content","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"internalType":"struct HelloCelo.Message[]","name":"","type":"tuple[]"}],
-        "stateMutability":"view",
-        "type":"function"
-    },
-    {
-        "inputs":[],
-        "name":"getMessageCount",
-        "outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-        "stateMutability":"view",
-        "type":"function"
-    },
-    {
-        "anonymous": false,
-        "inputs":[{"indexed":true,"internalType":"address","name":"sender","type":"address"},{"indexed":false,"internalType":"string","name":"content","type":"string"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],
-        "name":"MessageSent",
-        "type":"event"
-    }
+// === Konfiguracja kontraktu ===
+const CONTRACT_ADDRESS = "0x88Fd392bC4d948DaD1d27B73cad89fF34507EA9B";
+
+// Wklej tutaj ABI swojego kontraktu w formacie JSON
+const CONTRACT_ABI = [
+  // przykład minimalny: 
+  // {
+  //   "inputs": [{"internalType":"string","name":"_message","type":"string"}],
+  //   "name":"sendMessage",
+  //   "outputs":[],
+  //   "stateMutability":"nonpayable",
+  //   "type":"function"
+  // }
 ];
 
-let provider, signer, contract;
+// === Inicjalizacja ContractKit dla mainnet ===
+const kit = new ContractKit.newKit("https://forno.celo.org");
 
-async function init() {
-    if (!window.ethereum) {
-        alert("Please install MetaMask or Celo Extension Wallet!");
-        return;
-    }
+// Status wyświetlany użytkownikowi
+const statusDiv = document.getElementById("status");
 
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    signer = provider.getSigner();
-    contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-    loadMessages();
-    subscribeEvents();
-
-    document.getElementById("sendBtn").addEventListener("click", sendMessage);
-}
-
-async function loadMessages() {
-    const messagesDiv = document.getElementById("messages");
-    const countSpan = document.getElementById("msgCount");
-    messagesDiv.innerHTML = "<p>Loading messages...</p>";
-
+// Funkcja do połączenia portfela
+async function connectWallet() {
+  if (window.celo) {
     try {
-        const messages = await contract.getAllMessages();
-        messagesDiv.innerHTML = "";
-        countSpan.textContent = messages.length;
-
-        messages.forEach(msg => {
-            const div = document.createElement("div");
-            div.className = "message";
-            div.innerHTML = `<strong>${msg.sender}</strong>: ${msg.content} <em>${new Date(msg.timestamp*1000).toLocaleString()}</em>`;
-            messagesDiv.appendChild(div);
-        });
-    } catch(err) {
-        console.error(err);
-        messagesDiv.innerHTML = "<p>Error loading messages</p>";
+      await window.celo.enable(); // wywołanie portfela
+      const web3 = new Web3(window.celo);
+      kit.web3 = web3;
+      const accounts = await web3.eth.getAccounts();
+      return accounts[0]; // pierwszy adres portfela
+    } catch (error) {
+      console.error("Połączenie portfela anulowane:", error);
+      statusDiv.innerText = "Połączenie portfela anulowane.";
     }
+  } else {
+    alert("Zainstaluj portfel Celo, np. Valora.");
+  }
 }
 
+// Funkcja wysyłania wiadomości
 async function sendMessage() {
-    const input = document.getElementById("messageInput");
-    const text = input.value.trim();
-    if (!text) return alert("Message cannot be empty");
+  const walletAddress = await connectWallet();
+  if (!walletAddress) return;
 
-    const status = document.getElementById("status");
-    status.textContent = "Sending message...";
-    try {
-        const tx = await contract.sendMessage(text);
-        await tx.wait();
-        input.value = "";
-        status.textContent = "Message sent!";
-        loadMessages();
-    } catch(err) {
-        console.error(err);
-        status.textContent = "Transaction failed.";
-    }
+  const messageInput = document.getElementById("messageInput");
+  const message = messageInput.value.trim();
+  if (message.length === 0) {
+    alert("Wpisz wiadomość przed wysłaniem!");
+    return;
+  }
+
+  statusDiv.innerText = "Wysyłanie wiadomości...";
+
+  try {
+    const contract = new kit.web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+
+    // Wywołanie funkcji kontraktu
+    await contract.methods.sendMessage(message).send({ from: walletAddress });
+
+    statusDiv.innerText = "Wiadomość wysłana!";
+    console.log("Wiadomość wysłana z portfela:", walletAddress);
+
+    // Czyścimy input po wysłaniu
+    messageInput.value = "";
+
+  } catch (err) {
+    console.error("Błąd wysyłania wiadomości:", err);
+    statusDiv.innerText = "Błąd wysyłania wiadomości. Sprawdź konsolę.";
+  }
 }
 
-function subscribeEvents() {
-    contract.on("MessageSent", (sender, content, timestamp) => {
-        const messagesDiv = document.getElementById("messages");
-        const countSpan = document.getElementById("msgCount");
-
-        const div = document.createElement("div");
-        div.className = "message";
-        div.innerHTML = `<strong>${sender}</strong>: ${content} <em>${new Date(timestamp*1000).toLocaleString()}</em>`;
-        messagesDiv.prepend(div);
-
-        countSpan.textContent = parseInt(countSpan.textContent) + 1;
-    });
-}
-
-window.addEventListener("load", init);
+// Obsługa kliknięcia przycisku
+document.getElementById("sendBtn").addEventListener("click", sendMessage);
