@@ -51,6 +51,7 @@ const statusDiv = document.getElementById("status");
 
 // Connect wallet
 document.getElementById("connectBtn").addEventListener("click", async () => {
+  console.log("Connect wallet clicked");
   if (!window.ethereum) {
     alert("Install MetaMask or Rabby and set Celo Mainnet.");
     return;
@@ -66,14 +67,14 @@ document.getElementById("connectBtn").addEventListener("click", async () => {
     document.getElementById("walletStatus").innerText = `Connected: ${currentWallet}`;
 
     const chainId = await web3.eth.getChainId();
+    console.log("Chain ID:", chainId);
     if (chainId !== 42220) {
       alert("Please switch your wallet to Celo Mainnet!");
       currentWallet = null;
       document.getElementById("walletStatus").innerText = "Wallet not connected";
     }
 
-    // Load messages on connect
-    await loadMessages();
+    await loadMessages(); // Load messages on connect
 
   } catch (err) {
     console.error("Wallet connection canceled:", err);
@@ -83,6 +84,7 @@ document.getElementById("connectBtn").addEventListener("click", async () => {
 
 // Send message
 document.getElementById("sendBtn").addEventListener("click", async () => {
+  console.log("Send button clicked, currentWallet:", currentWallet);
   if (!currentWallet) {
     alert("Please connect your wallet first!");
     return;
