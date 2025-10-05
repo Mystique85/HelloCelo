@@ -29,7 +29,7 @@ document.getElementById("connectBtn").addEventListener("click", async () => {
       currentWallet = accounts[0];
       document.getElementById("walletStatus").innerText = `Connected: ${currentWallet}`;
 
-      // Optional: Check network
+      // Check network
       const chainId = await web3.eth.getChainId();
       if (chainId !== 42220) {
         alert("Please switch your wallet to Celo Mainnet!");
