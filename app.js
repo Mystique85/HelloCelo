@@ -1,52 +1,87 @@
 // === Contract configuration ===
 const CONTRACT_ADDRESS = "0x88Fd392bC4d948DaD1d27B73cad89fF34507EA9B";
-
-// Paste your contract ABI here in JSON format
 const CONTRACT_ABI = [
-  // Example minimal:
-  // {
-  //   "inputs":[{"internalType":"string","name":"_message","type":"string"}],
-  //   "name":"sendMessage",
-  //   "outputs":[],
-  //   "stateMutability":"nonpayable",
-  //   "type":"function"
-  // }
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": false, "internalType": "string", "name": "content", "type": "string" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "MessageSent",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "getAllMessages",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "sender", "type": "address" },
+          { "internalType": "string", "name": "content", "type": "string" },
+          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+        ],
+        "internalType": "struct HelloCelo.Message[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMessageCount",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "_content", "type": "string" }],
+    "name": "sendMessage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ];
 
 const kit = new ContractKit.newKit("https://forno.celo.org"); // Celo Mainnet
-const statusDiv = document.getElementById("status");
 let currentWallet = null;
+const statusDiv = document.getElementById("status");
 
-// Connect Wallet button
+// Connect wallet
 document.getElementById("connectBtn").addEventListener("click", async () => {
-  if (window.ethereum) {
-    try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const web3 = new Web3(window.ethereum);
-      kit.web3 = web3;
-
-      const accounts = await web3.eth.getAccounts();
-      currentWallet = accounts[0];
-      document.getElementById("walletStatus").innerText = `Connected: ${currentWallet}`;
-
-      // Check network
-      const chainId = await web3.eth.getChainId();
-      if (chainId !== 42220) {
-        alert("Please switch your wallet to Celo Mainnet!");
-        currentWallet = null;
-        document.getElementById("walletStatus").innerText = "Wallet not connected";
-      }
-
-    } catch (err) {
-      console.error("Wallet connection canceled:", err);
-      document.getElementById("walletStatus").innerText = "Wallet connection canceled";
-    }
-  } else {
+  if (!window.ethereum) {
     alert("Install MetaMask or Rabby and set Celo Mainnet.");
+    return;
+  }
+
+  try {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const web3 = new Web3(window.ethereum);
+    kit.web3 = web3;
+
+    const accounts = await web3.eth.getAccounts();
+    currentWallet = accounts[0];
+    document.getElementById("walletStatus").innerText = `Connected: ${currentWallet}`;
+
+    const chainId = await web3.eth.getChainId();
+    if (chainId !== 42220) {
+      alert("Please switch your wallet to Celo Mainnet!");
+      currentWallet = null;
+      document.getElementById("walletStatus").innerText = "Wallet not connected";
+    }
+
+    // Load messages on connect
+    await loadMessages();
+
+  } catch (err) {
+    console.error("Wallet connection canceled:", err);
+    document.getElementById("walletStatus").innerText = "Wallet connection canceled";
   }
 });
 
-// Send Message button
+// Send message
 document.getElementById("sendBtn").addEventListener("click", async () => {
   if (!currentWallet) {
     alert("Please connect your wallet first!");
@@ -68,8 +103,33 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
     statusDiv.innerText = "Message sent!";
     document.getElementById("messageInput").value = "";
 
+    await loadMessages(); // Refresh messages
+
   } catch (err) {
     console.error("Error sending message:", err);
     statusDiv.innerText = "Error sending message. Check console.";
   }
 });
+
+// Load messages from contract
+async function loadMessages() {
+  const contract = new kit.web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+  try {
+    const messages = await contract.methods.getAllMessages().call();
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
+
+    messages.forEach((msg, index) => {
+      const date = new Date(msg.timestamp * 1000).toLocaleString();
+      const div = document.createElement("div");
+      div.innerText = `${index + 1}. [${date}] ${msg.sender}: ${msg.content}`;
+      messagesDiv.appendChild(div);
+    });
+
+    const count = await contract.methods.getMessageCount().call();
+    document.getElementById("msgCount").innerText = count;
+
+  } catch (err) {
+    console.error("Could not load messages:", err);
+  }
+}
