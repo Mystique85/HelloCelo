@@ -5,22 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>HelloCelo DApp</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 </head>
 <body>
-  <h1>HelloCelo DApp</h1>
+<div class="container">
+    <!-- Logo -->
+    <div class="logo">
+        <img src="hellocelo-logo.png" alt="HelloCelo Logo">
+        <h1>HelloCelo DApp</h1>
+    </div>
 
-  <button id="connectBtn">Connect Wallet</button>
-  <div id="walletStatus">Wallet not connected</div>
-  <br>
+    <!-- Wallet -->
+    <div class="wallet-section">
+        <button id="connectBtn">Connect Wallet</button>
+        <div id="walletStatus">Wallet not connected</div>
+    </div>
 
-  <input type="text" id="messageInput" placeholder="Enter your message (max 280 chars)">
-  <button id="sendBtn">Send Message</button>
-  <div id="status"></div>
+    <!-- Send Message -->
+    <div class="message-section">
+        <input type="text" id="messageInput" placeholder="Enter your message (max 280 chars)">
+        <button id="sendBtn">Send Message</button>
+        <div id="status"></div>
+    </div>
 
-  <h2>Messages (<span id="msgCount">0</span>)</h2>
-  <div id="messages"></div>
+    <!-- Messages -->
+    <div class="messages-section">
+        <h2>Messages (<span id="msgCount">0</span>)</h2>
+        <div id="messages"></div>
+    </div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
