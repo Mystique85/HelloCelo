@@ -1,32 +1,79 @@
-/* Header z logo DApp i Celo */
-.header {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* odstęp między logo a tekstem */
-    padding: 15px 20px;
-    background-color: #1e1e1e; /* pasuje do tła container */
-    border-bottom: 2px solid #333;
-    border-radius: 12px 12px 0 0; /* lekko zaokrąglone rogi na górze */
-}
-
-.dapp-logo {
-    width: 60px;
-    height: 60px;
-}
-
-.celo-logo {
-    width: 35px;
-    height: 35px;
-}
-
-.header h1 {
-    font-size: 24px;
-    color: #FFD43B; /* żółty Celo, pasuje do przycisków */
+body {
     margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #121212;
+    color: #fff;
 }
 
-.header p {
-    font-size: 14px;
-    color: #ccc;
-    margin-left: auto; /* przesuwa tekst „Connected to Celo Mainnet” na prawo */
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 120px;
+    margin-bottom: 10px;
+}
+
+.wallet-section, .message-section {
+    margin: 20px 0;
+}
+
+input[type="text"] {
+    width: calc(100% - 140px);
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+/* Żółte przyciski w stylu Celo */
+button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: linear-gradient(90deg, #FFD43B, #FFB800); /* Celo żółty gradient */
+    color: #121212; /* ciemny tekst pasujący do żółtego */
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+    background: linear-gradient(90deg, #FFE066, #FFC300); /* jaśniejszy żółty przy hover */
+}
+
+#messages div {
+    background: #2a2a2a;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+    }
 }
