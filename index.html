@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>HelloCelo DApp</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>HelloCelo DApp</title>
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Web3 and Celo ContractKit -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.11.5/dist/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@celo/contractkit@1.10.0/lib/index.min.js"></script>
+  <!-- Web3 and Celo ContractKit -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.11.5/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@celo/contractkit@1.10.0/lib/index.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>HelloCelo Message Board</h1>
+  <div class="container">
+    <h1>HelloCelo Message Board</h1>
 
-        <!-- Connect Wallet -->
-        <button id="connectBtn">Connect Wallet</button>
-        <div id="walletStatus">Wallet not connected</div>
-        <br>
+    <!-- Connect Wallet -->
+    <button id="connectBtn">Connect Wallet</button>
+    <div id="walletStatus">Wallet not connected</div>
+    <br>
 
-        <!-- Send Message -->
-        <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
-        <br><br>
-        <button id="sendBtn">Send</button>
+    <!-- Send Message -->
+    <input type="text" id="messageInput" placeholder="Type your message (max 280 chars)">
+    <br><br>
+    <button id="sendBtn">Send</button>
 
-        <div id="status"></div>
+    <div id="status"></div>
 
-        <h2>Messages (<span id="msgCount">0</span>)</h2>
-        <div id="messages"></div>
-    </div>
+    <h2>Messages (<span id="msgCount">0</span>)</h2>
+    <div id="messages"></div>
+  </div>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
