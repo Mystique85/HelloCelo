@@ -1,13 +1,33 @@
 // CONFIG
 const CONTRACT_ADDRESS = "0x88Fd392bC4d948DaD1d27B73cad89fF34507EA9B";
-const CONTRACT_ABI = [ /* wklej ABI Twojego kontraktu */ ];
+const CONTRACT_ABI = [
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true,"internalType": "address","name": "sender","type": "address"},
+      {"indexed": false,"internalType": "string","name": "content","type": "string"},
+      {"indexed": false,"internalType": "uint256","name": "timestamp","type": "uint256"}
+    ],
+    "name": "MessageSent","type": "event"
+  },
+  {
+    "inputs": [],"name": "getAllMessages",
+    "outputs": [
+      {"components": [
+        {"internalType": "address","name": "sender","type": "address"},
+        {"internalType": "string","name": "content","type": "string"},
+        {"internalType": "uint256","name": "timestamp","type": "uint256"}
+      ],"internalType": "struct HelloCelo.Message[]","name": "","type": "tuple[]"}
+    ],
+    "stateMutability": "view","type": "function"
+  },
+  {"inputs":[],"name":"getMessageCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"string","name":"_content","type":"string"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"}
+];
 
-let provider;
-let signer;
-let contract;
-let currentAccount;
+let provider, signer, contract, currentAccount;
 
-// UI
+// UI refs
 const connectBtn = document.getElementById("connectBtn");
 const walletStatus = document.getElementById("walletStatus");
 const statusDiv = document.getElementById("status");
@@ -21,12 +41,11 @@ connectBtn.addEventListener("click", async () => {
 
   const injected = window.ethereum || window.celo;
   try {
-    await injected.request ? injected.request({ method: 'eth_requestAccounts' }) : injected.enable();
+    await (injected.request ? injected.request({ method: 'eth_requestAccounts' }) : injected.enable());
     provider = new ethers.providers.Web3Provider(injected);
     signer = provider.getSigner();
     currentAccount = await signer.getAddress();
     walletStatus.innerText = `Connected: ${currentAccount}`;
-
     contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
     await loadMessages();
