@@ -32,6 +32,39 @@ const connectBtn = document.getElementById("connectBtn");
 const walletStatus = document.getElementById("walletStatus");
 const statusDiv = document.getElementById("status");
 
+// SWITCH TO CELO MAINNET
+async function switchToCelo() {
+  if (!window.ethereum) return;
+
+  const CELO_CHAIN_ID = "0xa4ec"; // Hex for 42220
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: CELO_CHAIN_ID }],
+    });
+  } catch (switchError) {
+    if (switchError.code === 4902) {
+      // Network not added, add Celo Mainnet
+      try {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [{
+            chainId: CELO_CHAIN_ID,
+            chainName: "Celo Mainnet",
+            nativeCurrency: { name: "CELO", symbol: "CELO", decimals: 18 },
+            rpcUrls: ["https://forno.celo.org"],
+            blockExplorerUrls: ["https://celo.blockscout.com"],
+          }],
+        });
+      } catch (addError) {
+        console.error("Could not add Celo Mainnet", addError);
+      }
+    } else {
+      console.error("Failed to switch to Celo", switchError);
+    }
+  }
+}
+
 // CONNECT WALLET
 connectBtn.addEventListener("click", async () => {
   if (!window.ethereum && !window.celo) {
@@ -42,6 +75,10 @@ connectBtn.addEventListener("click", async () => {
   const injected = window.ethereum || window.celo;
   try {
     await (injected.request ? injected.request({ method: 'eth_requestAccounts' }) : injected.enable());
+
+    // 🔹 Switch to Celo Mainnet
+    await switchToCelo();
+
     provider = new ethers.providers.Web3Provider(injected);
     signer = provider.getSigner();
     currentAccount = await signer.getAddress();
@@ -49,7 +86,8 @@ connectBtn.addEventListener("click", async () => {
     contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
     await loadMessages();
-    statusDiv.innerText = "Wallet connected!";
+    listenEvents();
+    statusDiv.innerText = "Wallet connected and on Celo Mainnet!";
   } catch (err) {
     console.error("Wallet connect failed:", err);
     walletStatus.innerText = "Connection failed";
@@ -80,6 +118,7 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
 
 // LOAD MESSAGES
 async function loadMessages() {
+  if (!contract) return;
   try {
     const messages = await contract.getAllMessages();
     const messagesDiv = document.getElementById("messages");
@@ -96,4 +135,13 @@ async function loadMessages() {
   } catch (err) {
     console.error("Error loading messages:", err);
   }
+}
+
+// LISTEN TO EVENTS
+function listenEvents() {
+  if (!contract) return;
+  contract.on("MessageSent", (sender, content, timestamp, event) => {
+    console.log("New message event:", sender, content, timestamp);
+    loadMessages();
+  });
 }
