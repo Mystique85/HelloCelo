@@ -37,20 +37,22 @@ input[type="text"] {
     font-size: 16px;
 }
 
+/* Żółte przyciski w stylu Celo */
 button {
     padding: 12px 20px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    background: linear-gradient(90deg, #ff6ec7, #ff9a44);
-    color: #fff;
+    background: linear-gradient(90deg, #FFD43B, #FFB800); /* Celo żółty gradient */
+    color: #121212; /* ciemny tekst pasujący do żółtego */
     transition: transform 0.2s, opacity 0.2s;
 }
 
 button:hover {
     transform: scale(1.05);
     opacity: 0.9;
+    background: linear-gradient(90deg, #FFE066, #FFC300); /* jaśniejszy żółty przy hover */
 }
 
 #messages div {
