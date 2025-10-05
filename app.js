@@ -4,22 +4,22 @@ const CONTRACT_ABI = [
   {
     "anonymous": false,
     "inputs": [
-      {"indexed": true,"internalType": "address","name": "sender","type": "address"},
-      {"indexed": false,"internalType": "string","name": "content","type": "string"},
-      {"indexed": false,"internalType": "uint256","name": "timestamp","type": "uint256"}
+      {"indexed": true,"internalType":"address","name":"sender","type":"address"},
+      {"indexed": false,"internalType":"string","name":"content","type":"string"},
+      {"indexed": false,"internalType":"uint256","name":"timestamp","type":"uint256"}
     ],
-    "name": "MessageSent","type": "event"
+    "name":"MessageSent","type":"event"
   },
   {
-    "inputs": [],"name": "getAllMessages",
-    "outputs": [
-      {"components": [
-        {"internalType": "address","name": "sender","type": "address"},
-        {"internalType": "string","name": "content","type": "string"},
-        {"internalType": "uint256","name": "timestamp","type": "uint256"}
-      ],"internalType": "struct HelloCelo.Message[]","name": "","type": "tuple[]"}
+    "inputs":[],"name":"getAllMessages",
+    "outputs":[
+      {"components":[
+        {"internalType":"address","name":"sender","type":"address"},
+        {"internalType":"string","name":"content","type":"string"},
+        {"internalType":"uint256","name":"timestamp","type":"uint256"}
+      ],"internalType":"struct HelloCelo.Message[]","name":"","type":"tuple[]"}
     ],
-    "stateMutability": "view","type": "function"
+    "stateMutability":"view","type":"function"
   },
   {"inputs":[],"name":"getMessageCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
   {"inputs":[{"internalType":"string","name":"_content","type":"string"}],"name":"sendMessage","outputs":[],"stateMutability":"nonpayable","type":"function"}
@@ -44,7 +44,6 @@ async function switchToCelo() {
     });
   } catch (switchError) {
     if (switchError.code === 4902) {
-      // Network not added, add Celo Mainnet
       try {
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
@@ -88,6 +87,12 @@ connectBtn.addEventListener("click", async () => {
     await loadMessages();
     listenEvents();
     statusDiv.innerText = "Wallet connected and on Celo Mainnet!";
+
+    // 🔹 Farcaster Mini App SDK - mark app as ready
+    if (window.sdk) {
+      sdk.actions.ready();
+    }
+
   } catch (err) {
     console.error("Wallet connect failed:", err);
     walletStatus.innerText = "Connection failed";
