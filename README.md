@@ -18,7 +18,8 @@
 ---
 
 ## 🚀 Live Demo
-🔗 [Try HelloCelo DApp](https://hello-celo-v2.vercel.app/)  
+🔗 [Try the HelloCelo DApp](https://hello-celo-v2.vercel.app/) _(opens in new tab)_
+
 *(Runs directly in your browser — connect with MetaMask, Celo Wallet, or Rabby.)*
 
 ---
@@ -49,8 +50,7 @@ $HC (HelloCelo Token) is a **community-driven reward token** on **Celo Mainnet**
 Join the movement.  
 Start messaging — and earn your first $HC tokens today! 🚀  
 
-🔗 <a href="https://hello-celo-v2.vercel.app/" target="_blank" rel="noopener noreferrer">Try the HelloCelo DApp</a>
-
+🔗 [Try the HelloCelo DApp](https://hello-celo-v2.vercel.app/) _(opens in new tab)_
 
 ## 🧾 Smart Contract
 **File:** `contracts/HelloCelo.sol`  
