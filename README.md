@@ -49,7 +49,7 @@ $HC (HelloCelo Token) is a **community-driven reward token** on **Celo Mainnet**
 Join the movement.  
 Start messaging — and earn your first $HC tokens today! 🚀  
 
-🔗 [Try the HelloCelo DApp](https://hello-celo-v2.vercel.app/)
+🔗 <a href="https://hello-celo-v2.vercel.app/" target="_blank" rel="noopener noreferrer">Try the HelloCelo DApp</a>
 
 
 ## 🧾 Smart Contract
